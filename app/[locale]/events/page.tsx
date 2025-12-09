@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import Image from 'next/image'
 import { formatDate } from '@/lib/utils'
 import { Calendar, MapPin } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
@@ -39,10 +40,11 @@ export default async function EventsPage({
               <Card key={event.id} className="hover:shadow-lg transition">
                 {event.banner && (
                   <div className="relative h-48 w-full">
-                    <img
+                    <Image
                       src={event.banner}
                       alt={locale === 'am' ? event.titleAm || event.title : event.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   </div>
                 )}
