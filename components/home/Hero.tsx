@@ -1,22 +1,22 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
 export default function Hero() {
   const t = useTranslations('home')
-  const locale = useTranslations().locale || 'en'
+  const locale = useLocale()
 
   return (
     <div className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
       <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {t('title')}
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-2xl md:text-4xl font-bold mb-4">
+            {t('schoolName')}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-blue-100">
+          <p className="text-lg md:text-xl mb-8 text-blue-100">
             {t('subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

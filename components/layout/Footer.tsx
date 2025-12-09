@@ -1,8 +1,10 @@
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 
 export default function Footer() {
   const t = useTranslations('nav')
+  const tHome = useTranslations('home')
+  const locale = useLocale()
 
   return (
     <footer className="bg-gray-900 text-white mt-auto">
@@ -13,7 +15,7 @@ export default function Footer() {
               {t('about')}
             </h3>
             <p className="text-gray-400 text-sm">
-              Ethiopian Orthodox Tewahedo Church Sunday School Management System
+              {tHome('schoolName')}
             </p>
           </div>
           <div>
@@ -67,7 +69,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Sunday School Management System. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {tHome('schoolName')}. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -5,7 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Mail, Phone, MapPin } from 'lucide-react'
 
-export default function ContactPage() {
+export default function ContactPage({
+  params: { locale }
+}: {
+  params: { locale: string }
+}) {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">Contact Us</h1>
@@ -21,7 +25,9 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold mb-1">Address</h3>
                 <p className="text-gray-600">
-                  Ethiopian Orthodox Tewahedo Church<br />
+                  {locale === 'am' 
+                    ? 'የአያት መካነ ሕይወት ጠበል መድኃኔዓለም እና ቅ/አርሴማ ቤ/ያን ወልድ ዋሕድ ሰ/ት/ቤት'
+                    : 'Ayat Mekane Hiwot Tebel Medihanialem and Saint Arsema Church, Wold Wahid Sunday School'}<br />
                   Sunday School Department<br />
                   Addis Ababa, Ethiopia
                 </p>

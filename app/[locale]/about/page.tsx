@@ -7,6 +7,7 @@ export default async function AboutPage({
   params: { locale: string }
 }) {
   const t = await getTranslations('nav')
+  const tHome = await getTranslations('home')
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -18,6 +19,11 @@ export default async function AboutPage({
             <CardTitle>About Sunday School</CardTitle>
           </CardHeader>
           <CardContent className="prose">
+            <p className="text-lg font-semibold mb-4">
+              {locale === 'am' 
+                ? 'የአያት መካነ ሕይወት ጠበል መድኃኔዓለም እና ቅ/አርሴማ ቤ/ያን ወልድ ዋሕድ ሰ/ት/ቤት'
+                : 'Ayat Mekane Hiwot Tebel Medihanialem and Saint Arsema Church, Wold Wahid Sunday School'}
+            </p>
             <p className="text-lg">
               The Sunday School program at the Ethiopian Orthodox Tewahedo Church is dedicated to 
               providing spiritual education and guidance to children and youth. Our mission is to 

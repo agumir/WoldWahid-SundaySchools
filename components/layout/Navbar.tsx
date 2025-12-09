@@ -19,8 +19,10 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link href={`/${locale}`} className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-primary">
-              {locale === 'am' ? 'እሁድ ትምህርት' : 'Sunday School'}
+            <span className="text-xl font-bold text-primary">
+              {locale === 'am' 
+                ? 'የአያት መካነ ሕይወት ጠበል መድኃኔዓለም እና ቅ/አርሴማ ቤ/ያን ወልድ ዋሕድ ሰ/ት/ቤት'
+                : 'Ayat Mekane Hiwot Tebel Medihanialem and Saint Arsema Church, Wold Wahid Sunday School'}
             </span>
           </Link>
 

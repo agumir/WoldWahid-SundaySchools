@@ -8,7 +8,7 @@ import { Providers } from './providers'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
-const inter = Inter({ subsets: ['latin', 'amharic'] })
+const inter = Inter({ subsets: ['latin'] })
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
