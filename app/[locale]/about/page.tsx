@@ -44,8 +44,8 @@ export default async function AboutPage({
           <CardContent className="prose">
             <p className="text-lg">
               The Ethiopian Orthodox Tewahedo Church is one of the oldest Christian churches in the world, 
-              with a rich history dating back to the first century. The word "Tewahedo" means "being made one" 
-              and reflects the Church's belief in the unified nature of Christ.
+              with a rich history dating back to the first century. The word &quot;Tewahedo&quot; means &quot;being made one&quot; 
+              and reflects the Church&apos;s belief in the unified nature of Christ.
             </p>
             <p>
               Our Church maintains ancient traditions, liturgical practices, and a deep commitment to 

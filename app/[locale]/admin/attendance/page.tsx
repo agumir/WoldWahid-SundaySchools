@@ -80,7 +80,7 @@ export default async function AttendancePage({
         <div>
           <Card>
             <CardHeader>
-              <CardTitle>Today's Summary</CardTitle>
+              <CardTitle>Today&apos;s Summary</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
