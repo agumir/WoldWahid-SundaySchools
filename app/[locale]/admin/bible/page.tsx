@@ -46,7 +46,7 @@ export default async function BibleReadingPlanPage({
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold mb-2">
                       {locale === 'am' ? plan.titleAm || plan.title : plan.title}
-                    </p>
+                    </h3>
                     <div className="text-sm text-gray-600 mb-2">
                       {formatDate(plan.startDate, locale)} - {formatDate(plan.endDate, locale)}
                     </div>
@@ -63,4 +63,3 @@ export default async function BibleReadingPlanPage({
     </div>
   )
 }
-
