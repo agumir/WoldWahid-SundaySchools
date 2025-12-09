@@ -1,0 +1,329 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  HR
+  TEACHER
+  STUDENT
+}
+
+enum ResourceType {
+  LESSON
+  BLOG
+  VIDEO
+  AUDIO
+  PDF
+}
+
+enum EventType {
+  REGULAR
+  SPECIAL
+  HOLIDAY
+}
+
+enum QuizType {
+  MCQ
+  TRUE_FALSE
+  SHORT_ANSWER
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  nameAm        String? // Amharic name
+  role          UserRole  @default(STUDENT)
+  phone         String?
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  student  Student?
+  teacher  Teacher?
+  sessions Session[]
+  accounts Account[]
+
+  // ADD THESE RELATION FIELDS
+  news      News[] // corresponds to News.author
+  resources Resource[] // corresponds to Resource.author
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Student {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  studentId   String    @unique // Custom student ID
+  grade       String?
+  class       String?
+  dateOfBirth DateTime?
+  address     String?
+  parentName  String?
+  parentPhone String?
+  parentEmail String?
+  notes       String?   @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attendance  Attendance[]
+  quizResults QuizResult[]
+  assignments AssignmentSubmission[]
+
+  @@map("students")
+}
+
+model Teacher {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  teacherId      String   @unique
+  department     String?
+  specialization String?
+  bio            String?  @db.Text
+  bioAm          String?  @db.Text
+  joinedDate     DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignments Assignment[]
+
+  @@map("teachers")
+}
+
+model News {
+  id          String    @id @default(cuid())
+  title       String
+  titleAm     String?
+  slug        String    @unique
+  content     String    @db.Text
+  contentAm   String?   @db.Text
+  excerpt     String?
+  excerptAm   String?
+  image       String?
+  authorId    String
+  published   Boolean   @default(false)
+  featured    Boolean   @default(false)
+  views       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+
+  author User @relation(fields: [authorId], references: [id])
+
+  @@map("news")
+}
+
+model Resource {
+  id            String       @id @default(cuid())
+  title         String
+  titleAm       String?
+  description   String?      @db.Text
+  descriptionAm String?      @db.Text
+  type          ResourceType
+  fileUrl       String?
+  videoUrl      String? // YouTube or other video URL
+  audioUrl      String?
+  content       String?      @db.Text // For blogs/lessons
+  contentAm     String?      @db.Text
+  thumbnail     String?
+  authorId      String?
+  category      String?
+  tags          String[]
+  views         Int          @default(0)
+  downloads     Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  author User? @relation(fields: [authorId], references: [id])
+
+  @@map("resources")
+}
+
+model Event {
+  id            String    @id @default(cuid())
+  title         String
+  titleAm       String?
+  description   String?   @db.Text
+  descriptionAm String?   @db.Text
+  type          EventType @default(REGULAR)
+  startDate     DateTime
+  endDate       DateTime?
+  location      String?
+  banner        String?
+  featured      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("events")
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+  studentId String
+  date      DateTime @default(now())
+  present   Boolean  @default(true)
+  notes     String?
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, date])
+  @@map("attendance")
+}
+
+model Quiz {
+  id            String   @id @default(cuid())
+  title         String
+  titleAm       String?
+  description   String?  @db.Text
+  descriptionAm String?  @db.Text
+  type          QuizType @default(MCQ)
+  questions     Json // Array of question objects
+  timeLimit     Int? // in minutes
+  passingScore  Int      @default(60)
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  results QuizResult[]
+
+  @@map("quizzes")
+}
+
+model QuizResult {
+  id        String   @id @default(cuid())
+  quizId    String
+  studentId String
+  score     Int
+  answers   Json // Student's answers
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  quiz    Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_results")
+}
+
+model Assignment {
+  id            String   @id @default(cuid())
+  title         String
+  titleAm       String?
+  description   String?  @db.Text
+  descriptionAm String?  @db.Text
+  teacherId     String
+  dueDate       DateTime
+  fileUrl       String?
+  content       String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  teacher     Teacher                @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  submissions AssignmentSubmission[]
+
+  @@map("assignments")
+}
+
+model AssignmentSubmission {
+  id           String   @id @default(cuid())
+  assignmentId String
+  studentId    String
+  fileUrl      String?
+  content      String?  @db.Text
+  submitted    Boolean  @default(false)
+  grade        Int?
+  feedback     String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, studentId])
+  @@map("assignment_submissions")
+}
+
+model BibleReadingPlan {
+  id            String   @id @default(cuid())
+  title         String
+  titleAm       String?
+  description   String?  @db.Text
+  descriptionAm String?  @db.Text
+  readings      Json // Array of {date, book, chapter, verses}
+  startDate     DateTime
+  endDate       DateTime
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("bible_reading_plans")
+}
+
+model Donation {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  amount    Float
+  currency  String   @default("ETB")
+  message   String?  @db.Text
+  anonymous Boolean  @default(false)
+  status    String   @default("pending") // pending, completed, failed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("donations")
+}
