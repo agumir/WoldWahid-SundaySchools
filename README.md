@@ -120,10 +120,34 @@ The system includes the following main models:
 
 ### Vercel Deployment
 
-1. Push your code to GitHub
-2. Import project in Vercel
-3. Add environment variables
-4. Deploy
+1. **Push your code to GitHub**
+   ```bash
+   git add .
+   git commit -m "Prepare for Vercel deployment"
+   git push origin main
+   ```
+
+2. **Import project in Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Click "New Project"
+   - Import your GitHub repository
+   - Vercel will auto-detect Next.js
+
+3. **Add environment variables in Vercel Dashboard**
+   Go to Project Settings → Environment Variables and add:
+   - `DATABASE_URL` - Your PostgreSQL connection string (e.g., from Railway)
+   - `NEXTAUTH_SECRET` - Generate with: `openssl rand -base64 32`
+   - `NEXTAUTH_URL` - Your Vercel deployment URL (e.g., `https://your-app.vercel.app`)
+
+4. **Deploy**
+   - Click "Deploy"
+   - Vercel will automatically:
+     - Run `npm install`
+     - Run `prisma generate` (via postinstall script)
+     - Run `npm run build`
+     - Deploy your application
+
+**Note:** The build script now includes `prisma generate` to ensure Prisma Client is generated during the build process.
 
 ### Railway Deployment
 
